@@ -1,0 +1,29 @@
+# Ignore Python cache
+__pycache__/
+*.py[cod]
+
+# Ignore local environment files
+.env
+.venv/
+*.egg-info/
+
+# Ignore version control
+.git/
+.gitignore
+
+# Ignore test and build artifacts
+dist/
+build/
+.coverage
+htmlcov/
+*.log
+
+# Ignore IDE/editor config
+.vscode/
+.idea/
+
+# Ignore lock file backups
+*.lock~
+
+# Ignore Docker-related cache
+docker-compose.override.yml

@@ -22,6 +22,7 @@ This is a simple read-only [Model Context Protocol](https://modelcontextprotocol
 
 3. Add the MCP server configuration to your LLM client.  For example, in Claude Desktop (Mac):
 
+UV
 ```json
 {
   "mcpServers": {
@@ -38,6 +39,31 @@ This is a simple read-only [Model Context Protocol](https://modelcontextprotocol
                 "NETBOX_TOKEN": "<your-api-token>"
             }
         }
+}
+```
+
+Docker
+```json
+{
+  "mcpServers": { 
+    "gitlab": {
+      "command": "docker",
+      "args": [
+        "run",
+        "--rm",
+        "-i",
+        "-e",
+        "NETBOX_URL",
+        "-e",
+        "NETBOX_TOKEN",
+        "mcp/netbox-mcp-server"
+      ],
+      "env": {
+        "NETBOX_URL": "https://netbox.example.com/",
+        "NETBOX_TOKEN": "<your-api-token>"
+      }
+    }
+  }
 }
 ```
 > On Windows, use full, escaped path to your instance, such as `C:\\Users\\myuser\\.local\\bin\\uv` and `C:\\Users\\myuser\\netbox-mcp-server`. 
