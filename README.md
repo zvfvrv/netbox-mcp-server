@@ -46,7 +46,7 @@ Docker
 ```json
 {
   "mcpServers": { 
-    "gitlab": {
+    "netbox": {
       "command": "docker",
       "args": [
         "run",
