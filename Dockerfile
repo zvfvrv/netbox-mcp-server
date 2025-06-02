@@ -1,5 +1,4 @@
-# Stage 1: Build with uv to manage dependencies
-FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim AS uv
+FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim
 
 # Set working directory
 WORKDIR /app
@@ -20,23 +19,5 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 ADD . /app
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --frozen --no-dev --no-editable
-
-# Stage 2: Final image using a minimal Python base
-FROM python:3.12-slim-bookworm
-
-# Optional: Create a non-root user (uncomment if needed)
-# RUN adduser --disabled-password --gecos "" app
-
-# Set working directory
-WORKDIR /app
-
-# Copy virtual environment and dependencies from the build stage
-COPY --from=uv /root/.local /root/.local
-COPY --from=uv --chown=app:app /app/.venv /app/.venv
-
-# Set path to use the virtual environment's executables
-ENV PATH="/app/.venv/bin:$PATH"
-
-# Default command to run the service
-# Note: Use a bind mount for the database file and pass --db-path when running
-ENTRYPOINT ["netbox-mcp-server"]
+EXPOSE 8000
+CMD [ "uv", "--directory", "/app", "run", "server.py", "--transport=http" ]

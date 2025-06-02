@@ -1,0 +1,12 @@
+version: "3.9"
+
+services:
+  netbox-mcp-server:
+    build: .
+    container_name: netbox-mcp-server
+    ports:
+      - "8000:8000"
+    environment:
+      - NETBOX_URL=${NETBOX_URL}
+      - NETBOX_TOKEN=${NETBOX_TOKEN}
+    command: uv --directory /app run server.py --transport=http

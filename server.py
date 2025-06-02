@@ -97,7 +97,7 @@ NETBOX_OBJECT_TYPES = {
     "webhooks": "extras/webhooks",
 }
 
-mcp = FastMCP("NetBox", log_level="DEBUG")
+mcp = FastMCP("NetBox", host="0.0.0.0", log_level="DEBUG")
 netbox = None
 
 @mcp.tool()
@@ -276,14 +276,36 @@ def netbox_get_changelogs(filters: dict):
     return netbox.get(endpoint, params=filters)
 
 if __name__ == "__main__":
+    import argparse
+    
     # Load NetBox configuration from environment variables
     netbox_url = os.getenv("NETBOX_URL")
     netbox_token = os.getenv("NETBOX_TOKEN")
-    
     if not netbox_url or not netbox_token:
         raise ValueError("NETBOX_URL and NETBOX_TOKEN environment variables must be set")
-    
     # Initialize NetBox client
     netbox = NetBoxRestClient(url=netbox_url, token=netbox_token)
-    
-    mcp.run(transport="stdio")
+
+    # Argument parser to choose transport and port
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--transport",
+        choices=["stdio", "http"],
+        default="stdio",
+        help="Transport method for MCP server"
+    )
+    parser.add_argument(
+        "--port",
+        type=int,
+        default=8000,
+        help="Port number to use with HTTP transport"
+    )
+    args = parser.parse_args()
+
+    if args.transport == "http":
+        print(f"Starting MCP server with HTTP transport on port {args.port}")
+        mcp.run(transport="streamable-http")
+    else:
+        print("Starting MCP server with stdio transport")
+        mcp.run(transport="stdio")
+
